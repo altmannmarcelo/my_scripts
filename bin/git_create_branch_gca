@@ -1,0 +1,57 @@
+#!/bin/bash
+# create new branch following GCA
+
+FEATURE_BRANCH=$1
+MINOR_VERSION=$2
+
+if [[ "x$FEATURE_BRANCH" = "x" ]];
+then
+  echo "Missing FEATURE_BRANCH parameter"
+  echo "$0 [JIRA TICKET] [MINOR VERSION]"
+  echo "$0 5174 5.7"
+  exit 1
+fi
+
+if [[ "$MINOR_VERSION" = "" ]];
+then
+  MINOR_VERSION="5.6"
+elif [ "$MINOR_VERSION" != "5.6" ] && [ "$MINOR_VERSION" != "5.7" ] && [ "$MINOR_VERSION" != "8.0" ]
+then
+  echo "Minor Version ${MINOR_VERSION} is invalid"
+  exit 1;
+fi
+
+
+CURRENT_VERSION=$MINOR_VERSION
+DONE=0
+function create_branch()
+{
+  case "$CURRENT_VERSION" in
+    5.6)
+      echo "Creating 5.6 PS-$FEATURE_BRANCH branch"
+      git checkout 5.6
+      local gca_commit=$(git show `git rev-list 5.6 ^8.0 --first-parent --topo-order | tail -1`^ | head -1 | awk '{print $2}')
+      git checkout -b "PS-${CURRENT_VERSION}-${FEATURE_BRANCH}" ${gca_commit}
+      CURRENT_VERSION=5.7
+      ;;
+    5.7)
+      echo "Creating 5.7 $FEATURE_BRANCH branch"
+      local gca_commit=$(git show `git rev-list 5.7 ^8.0 --first-parent --topo-order | tail -1`^ | head -1 | awk '{print $2}')
+      git checkout -b "PS-${CURRENT_VERSION}-${FEATURE_BRANCH}" ${gca_commit}
+      CURRENT_VERSION=8.0
+      ;;
+    8.0)
+      echo "Creating 8.0 $FEATURE_BRANCH branch"
+      local gca_commit=$(git log -n 1 8.0 | head -1 | awk '{print $2}')
+      git checkout -b "PS-${CURRENT_VERSION}-${FEATURE_BRANCH}" ${gca_commit}
+      DONE=1
+      ;;
+  esac
+}
+
+while : ; do
+    create_branch
+    [[ $DONE -ne 1 ]] || break
+done
+
+git checkout "PS-${MINOR_VERSION}-${FEATURE_BRANCH}"

@@ -1,0 +1,27 @@
+#!/bin/bash 
+
+REBUILD=1
+if [[ -f cscope.files ]];
+then
+  while true; do
+    read -p "cscope.files exists. Do you want to rebuild? " yn
+    case $yn in
+        [Yy]* ) rm -f cscope.in.out cscope.out cscope.po.out cscope.files; break;;
+        [Nn]* ) REBUILD=0; break;;
+        * ) echo "Please answer yes or no.";;
+    esac
+  done
+fi
+
+if [[ ${REBUILD} -eq 1 ]];
+then
+  echo "Rebuild cscope.files . . ."
+  find . -name "*.c" -o -name "*.cc" -o -name "*.cpp" -o -name "*.h" -o -name "*.hpp" -o -name "*.ic" > cscope.files
+  echo "Done Rebuild cscope.files . . ."
+fi
+
+
+echo "Rebuilding database . . ."
+cscope -q -R -b -i cscope.files
+echo "Done Rebuilding database . . ."
+cscope -d

@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 
 REBUILD=1
 if [[ -f cscope.files ]];

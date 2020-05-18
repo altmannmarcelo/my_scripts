@@ -1,0 +1,5 @@
+echo 2 > /proc/sys/fs/suid_dumpable
+mkdir /tmp/corefiles
+chmod 777 /tmp/corefiles
+echo "/tmp/corefiles/core" > /proc/sys/kernel/core_pattern
+echo "1" > /proc/sys/kernel/core_uses_pid

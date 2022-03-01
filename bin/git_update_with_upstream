@@ -10,7 +10,11 @@ then
   exit 1
 fi
 REMOTE_NAME="percona"
+git checkout ${BRANCH}
+git fetch
 git fetch ${REMOTE_NAME}
 git checkout ${BRANCH} &&
 git merge ${REMOTE_NAME}/${BRANCH} &&
 git push origin
+git push origin --tags
+

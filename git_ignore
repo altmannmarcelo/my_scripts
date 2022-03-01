@@ -1,0 +1,9 @@
+.tags
+.tags1
+cscope.files
+cscope.in.out
+cscope.out
+cscope.po.out
+storage/innobase/xtrabackup/src/libarchive/build/pkgconfig/libarchive.pc
+*.h.gch
+libarchive.pc

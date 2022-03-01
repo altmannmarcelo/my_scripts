@@ -1,0 +1,2 @@
+#!/bin/bash
+sed -i 's/editor =.*/editor = vim/g' ~/.gitconfig

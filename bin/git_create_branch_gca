@@ -15,7 +15,7 @@ fi
 if [[ "$VERSION" = "" ]];
 then
   VERSION="5.6"
-elif [ "$VERSION" != "5.6" ] && [ "$VERSION" != "5.7" ] && [ "$VERSION" != "8.0" ]
+elif [ "$VERSION" != "2.4" ] && [ "$VERSION" != "5.6" ] && [ "$VERSION" != "5.7" ] && [ "$VERSION" != "8.0" ]
 then
   echo "Minor Version ${VERSION} is invalid"
   exit 1;
@@ -24,24 +24,26 @@ fi
 function create_branch()
 {
   case "$VERSION" in
+    2.4)
+      echo "Creating ${VERSION} $FEATURE_BRANCH branch"
+      git checkout ${VERSION}
+      local gca_commit=$(git show `git rev-list ${VERSION} ^origin/8.0 --first-parent --topo-order | tail -1`^ | head -1 | awk '{print $2}')
+      ;;
     5.6)
       echo "Creating 5.6 $FEATURE_BRANCH branch"
       git checkout 5.6
       local gca_commit=$(git show `git rev-list 5.6 ^origin/8.0 --first-parent --topo-order | tail -1`^ | head -1 | awk '{print $2}')
-      git checkout -b "${VERSION}-${FEATURE_BRANCH}" ${gca_commit}
       ;;
     5.7)
       echo "Creating 5.7 $FEATURE_BRANCH branch"
       local gca_commit=$(git show `git rev-list 5.7 ^origin/8.0 --first-parent --topo-order | tail -1`^ | head -1 | awk '{print $2}')
-      git checkout -b "${VERSION}-${FEATURE_BRANCH}" ${gca_commit}
       ;;
     8.0)
       echo "Creating 8.0 $FEATURE_BRANCH branch"
       local gca_commit=$(git log -n 1 origin/8.0 | head -1 | awk '{print $2}')
-      git checkout -b "${VERSION}-${FEATURE_BRANCH}" ${gca_commit}
       ;;
   esac
+  git checkout -b "${FEATURE_BRANCH}-${VERSION}" ${gca_commit}
 }
 
 create_branch
-git checkout "${VERSION}-${FEATURE_BRANCH}"

@@ -1,5 +1,5 @@
 #!/bin/bash
-INS_DIR="/work/pxc/percona-xtradb-cluster-ins-8.0"
+. pxc_common.sh 8.0
 #export PATH=$PATH:/work/pxb/binaries/percona-xtrabackup-2.4.20-Linux-x86_64/bin/
 cd ${INS_DIR};
 PID1=$(cat ${INS_DIR}/datadir1/mysql.pid)

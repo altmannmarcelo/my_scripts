@@ -1,3 +1,6 @@
 [submodule "clang-format-hooks"]
 	path = clang-format-hooks
 	url = https://github.com/barisione/clang-format-hooks.git
+[submodule "ydiff"]
+	path = ydiff
+	url = https://github.com/ymattw/ydiff.git

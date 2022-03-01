@@ -1,27 +1,25 @@
-#!/bin/bash -x
-. pxc_common.sh 5.7
+#!/bin/bash
+. ps_common.sh 5.6
 # run steps necessary to prepare build
 prep_build
-buildGalera
 cmake ${SRC_DIR} -DBUILD_CONFIG=mysql_release \
         -DCMAKE_BUILD_TYPE=${btype} \
         -DFEATURE_SET=community \
         -DCMAKE_INSTALL_PREFIX="${INS_DIR}" \
         -DMYSQL_DATADIR="${INS_DIR}/data" \
         -DWITH_PAM=ON \
-        -DWITHOUT_ROCKSDB=ON \
-        -DWITHOUT_TOKUDB=ON \
+        -DWITHOUT_TOKUDB=OFF  \
+        -DWITH_SCALABILITY_METRICS=ON \
         -DWITH_INNODB_MEMCACHED=ON \
-        -DDOWNLOAD_BOOST=1 \
-        -DWITH_PROTOBUF=bundled \
-        -DWITH_LZ4=bundled \
         -DWITH_EDITLINE=bundled \
+        -DWITH_ZLIB=system \
         -DWITH_LIBEVENT=bundled \
-        -DCOMPILATION_COMMENT="Percona XtraDB Cluster (GPL), Release 84.2, Revision ${PERCONA_REVISION}-debug" \
+        -DCOMPILATION_COMMENT="Percona Server (GPL), Revision ${PERCONA_REVISION}${BCOMMET}" \
         -DWITH_NUMA=ON \
-        -DWITH_BOOST="/work/boost" \
         -DMYSQL_SERVER_SUFFIX="" \
-        -DWITH_WSREP=ON \
         -DDEBUG_EXTNAME=OFF \
+        -DHAVE_TIME=ON \
+        -DHAVE_SYS_TIMEB_H=OFF \
         -DWITH_UNIT_TESTS=0;
-make_install
+make -j ${cpus} &&
+make -j ${cpus} install;

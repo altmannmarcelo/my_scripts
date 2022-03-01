@@ -1,19 +1,24 @@
-#!/bin/bash
-INS_DIR="/work/pxc/ins/8.0"
-export PATH=$PATH:/work/pxb/ins/8.0/bin/
+#!/bin/bash -x
+INS_DIR="/work/pxc/ins/5.7"
+XB_LOCATION="/work/pxb/binaries/percona-xtrabackup-2.4.20-Linux-x86_64/"
+export PATH=$PATH:$XB_LOCATION/bin/
 cd ${INS_DIR};
 if [ -z "${NUMBER_OF_NODES}" ]; then
   NUMBER_OF_NODES=2
 fi
-BASE_PORT=3600
+BASE_PORT=3400
 cat <<EOF > my.cnf
+[xtrabackup]
+xtrabackup-plugin-dir=${XB_LOCATION}/lib
+
 [mysqld]
-pxc_encrypt_cluster_traffic = OFF
+pxc_encrypt_cluster_traffic = ON
 wsrep_cluster_name=marcelo-altmann-pxc
 basedir = ${INS_DIR}
 wsrep_provider=${INS_DIR}/lib/libgalera_smm.so
-#early-plugin-load=keyring_file.so
-#plugin-load = "audit_log=audit_log.so"
+wsrep_sst_auth=root:
+early-plugin-load=keyring_file.so
+plugin-load = "audit_log=audit_log.so"
 pxc_maint_transition_period=1
 enforce-gtid-consistency
 gtid-mode=ON
@@ -51,7 +56,7 @@ wsrep_cluster_address=gcomm://${CLUSTER_ADDRESS::-1}
 wsrep_node_address=127.0.0.1:$((BASE_PORT + b + NUMBER_OF_NODES))
 wsrep_node_name=node_57_${i}
 log_error=${INS_DIR}/datadir${i}/error.err
-#keyring_file_data=${INS_DIR}/key${i}/keyringfile
+keyring_file_data=${INS_DIR}/key${i}/keyringfile
 pid-file=${INS_DIR}/datadir${i}/mysql.pid
 
 EOF

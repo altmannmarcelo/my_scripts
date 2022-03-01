@@ -16,7 +16,7 @@ fi
 if [[ ${REBUILD} -eq 1 ]];
 then
   echo "Rebuild cscope.files . . ."
-  find . -name "*.c" -o -name "*.cc" -o -name "*.cpp" -o -name "*.h" -o -name "*.hpp" -o -name "*.ic" -o -name "errmsg-utf8.txt" -o -name "messages_to_clients.txt" -o -name "messages_to_error_log.txt" > cscope.files
+  find . -name "*.c" -o -name "*.cc" -o -name "*.cpp" -o -name "*.h" -o -name "*.hpp" -o -name "*.ic" -o -name "*.ino" -o -name "errmsg-utf8.txt" -o -name "messages_to_clients.txt" -o -name "messages_to_error_log.txt" > cscope.files
   echo "Done Rebuild cscope.files . . ."
   echo "Rebuilding database . . ."
   cscope -q -R -b -i cscope.files

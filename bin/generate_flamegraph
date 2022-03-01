@@ -1,0 +1,10 @@
+#!/bin/bash
+PID=$1
+OUTFILE=$2
+TIME=$3
+
+perf record -e cycles -g --call-graph fp -F 180 -p $PID -- sleep $TIME
+perf script > out.perf
+/work/FlameGraph/stackcollapse-perf.pl out.perf > out.folded
+/work/FlameGraph/flamegraph.pl out.folded > $OUTFILE
+firefox $OUTFILE

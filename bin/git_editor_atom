@@ -1,0 +1,2 @@
+#!/bin/bash
+sed -i 's/editor =.*/editor = atom --wait/g' ~/.gitconfig

@@ -1,0 +1,2 @@
+. pxb_common.sh 8.0
+export PATH=$PATH:${INS_DIR}/bin

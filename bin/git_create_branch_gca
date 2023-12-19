@@ -15,7 +15,7 @@ fi
 if [[ "$VERSION" = "" ]];
 then
   VERSION="5.6"
-elif [ "$VERSION" != "2.4" ] && [ "$VERSION" != "5.6" ] && [ "$VERSION" != "5.7" ] && [ "$VERSION" != "8.0" ]
+elif [ "$VERSION" != "2.4" ] && [ "$VERSION" != "5.6" ] && [ "$VERSION" != "5.7" ] && [ "$VERSION" != "8.0" ] && [ "$VERSION" != "trunk" ]
 then
   echo "Minor Version ${VERSION} is invalid"
   exit 1;
@@ -40,7 +40,7 @@ function create_branch()
       ;;
     8.0)
       echo "Creating 8.0 $FEATURE_BRANCH branch"
-      local gca_commit=$(git log -n 1 origin/8.0 | head -1 | awk '{print $2}')
+      local gca_commit=$(git show `git rev-list ${VERSION} ^origin/trunk --first-parent --topo-order | tail -1`^ | head -1 | awk '{print $2}')
       ;;
   esac
   git checkout -b "${FEATURE_BRANCH}-${VERSION}" ${gca_commit}
